@@ -1,7 +1,12 @@
 package week3.day2;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -12,8 +17,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Redbus {
+	
+	
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		WebDriverManager.chromedriver().setup();
 		
 		DesiredCapabilities cap = new DesiredCapabilities();         
@@ -27,32 +34,50 @@ public class Redbus {
 		driver.manage().window().maximize();
 		Thread.sleep(2000);
 		
-		WebElement source = driver.findElement(By.xpath("//label[text()='FROM']"));
+		WebElement src = driver.findElement(By.xpath("//input[@id='src']"));
 		
-		source.clear();
+		src.clear();
 		
-		source.sendKeys("Koyambedu, Chennai",Keys.TAB);
+		src.sendKeys("Koyambedu, Chennai");
 		
-		Thread.sleep(2000);
+		Thread.sleep(4000);
 		
-		WebElement dest = driver.findElement(By.xpath("//label[text()='TO']"));
+		src.sendKeys(Keys.TAB);
+		
+		
+		WebElement dest = driver.findElement(By.xpath("//input[@id='dest']"));
 		
 		dest.clear();
 		
-		dest.sendKeys("Madurai (All Locations)",Keys.TAB);
+		dest.sendKeys("Madurai (All Locations)");
 		
 		Thread.sleep(2000);
+		
+		dest.sendKeys(Keys.TAB);
 		
 		driver.findElement(By.id("onward_cal")).click(); 
-		driver.findElement(By.xpath("//td[@class='past day']/following-sibling::td[1]")).click();
-		
-		driver.findElement(By.xpath("//button[text()='Search Buses']")).click(); 
-		
 		Thread.sleep(2000);
+		driver.findElement(By.xpath("//td[@class='past day']/following-sibling::td[2]")).click();
+		Thread.sleep(2000);
+		
+		driver.findElement(By.xpath("//button[@id='search_btn']")).click(); 
+		
+		Thread.sleep(30000);
 		
 		System.out.println("Date selected");
 		
-		//td[@class='past day']/following-sibling::td[1]
+		
+		String bus=driver.findElement(By.xpath("//span[@class='f-bold busFound']")).getText(); 
+		Thread.sleep(2000);
+		
+		System.out.println("No of bus found is: "+ bus);
+		
+		File source = driver.getScreenshotAs(OutputType.FILE);
+		
+		File target = new File ("E://Selenium//Day6-Feb28,2021/Redbus.png");
+		
+		FileUtils.copyFile(source, target);
+		
 		
 		
 	}
